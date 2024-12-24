@@ -19,9 +19,30 @@ for c in s:
         ctr = 1 (i want to include the current element in the new length of the unique substring)
 """       
 
-
+from collections import defaultdict
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
+        l = 0 
+        a = []
+        count = collections.defaultdict(int)
+        tlen = 0
+        for r in range(0,len(s)):
+            count[s[r]] += 1
+            while count[s[r]] > 1 :
+                t = s[l]
+                count[t]-=1
+                tlen-=1
+                l+=1
+                if count[t] == 0:
+                    count.pop(t)
+
+            tlen+=1
+            a.append(tlen)
+        return max(a) if a else 0
+
+        
+        
+        """
         if len(s) == 0:
             return 0
         if len(s) == 1:
@@ -63,4 +84,4 @@ class Solution:
                 if max_l<l:
                     max_l = l
             return max_l
-
+"""
