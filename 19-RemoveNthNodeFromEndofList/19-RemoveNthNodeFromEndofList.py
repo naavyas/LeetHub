@@ -10,6 +10,8 @@ Ideas:
 go through the whole list and find out the number of elements that could be present 
 then subract that - n . reach that number and then delete the next element
 if there is only one element in the list then just remove that
+ALTERNATIVE stack appraoch : 
+go through the list and keep adding the elements to a stack 
 
 """
 class Solution:
