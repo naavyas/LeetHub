@@ -1,3 +1,4 @@
+# Last updated: 3/24/2025, 1:43:34 PM
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
@@ -11,33 +12,37 @@ class Solution:
         if root == None or subRoot == None:
             return False
         if root.val != subRoot.val:
+            return False 
+        b1 = self.isSame(root.left, subRoot.left)
+        if b1 == False:
             return False
-        l = self.isSame(root.left, subRoot.left)
-        r = self.isSame(root.right, subRoot.right)
-        #print('l=', l, 'at', root.left)
-        #print('r =', r, 'at', root.right)
-        if r == False or l == False:
-            #print('came')
-            return False  
-        else:
-            return True
-
         
+        b2 = self.isSame(root.right,subRoot.right)
+        if b2 == False:
+            return False
+        return True
         
 
     def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
-        if root == None:
-            return False
-        if self.isSame(root,subRoot): 
-            #print('yes')
+        if root == None and subRoot == None:
             return True
-        else:
-            l = self.isSubtree(root.left, subRoot) 
-            r = self.isSubtree(root.right,subRoot)
-            if l == True or r == True:
-                return True
-            else: 
-                return False
+        if root == None or subRoot == None:
+            return False
+        if root.val == subRoot.val:
+            n = self.isSame(root,subRoot)
+        
+            if n == True:
+                return True 
+    
+        n = self.isSubtree(root.left,subRoot)
+        if n:
+            return True 
+        m = self.isSubtree(root.right,subRoot)
+        if m:
+            return True
         
         
+        return False
+
+
         
