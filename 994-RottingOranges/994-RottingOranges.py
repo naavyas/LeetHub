@@ -1,82 +1,84 @@
-# Last updated: 3/29/2025, 4:41:36 PM
+# Last updated: 4/2/2025, 1:18:48 PM
 """
-understanding the question 
-0 - empty 
+neighbors : no diagonals
+every minute - once we find a rotten orange if we see that any of the neighbors are fresh oranges then those also become rotten 
+2 - rotten 
 1 - fresh 
-2 - rotten orange 
-1 --- > 2 every minute if it is a neighbour 
-return the min no of minutes till all the oranges becomes rotten 
-Break it down: 
-If we see a cell with 0 - ignore 
-if we see a cell with 1 - check the neighbors to see if you can find a rotten orrange 
-if we find a rotten orange then we should chnage all the nighbors to rotten that are currently fresh and increment the time counter by 1
-everytime u make this change increment the minutes timmer by 1
-- dont keep a visited 
-- before making a chnage just check to make sure that the orange is not rotten 
--------------------------------
+0 - empty 
+basically min time in which all fresh oranges can be made rotten and then of suppose then -1 
+bfs : 
+considering the board at one time 
+timer : minute 
+i'll keep all the rotten orange to my queue 
+then i'll call my bfs 
+visited : array 
+ctr : basicallky compares original fresh oranges to final number after conversion 
+
+Time : O(N*M) 
+Space : O(N*M)
+[(0,1),(1,0)]
+var = (0,0)
+minutes = 2
+original_fresh = 6
+[[2,1,1],
+[0,1,1],
+[1,0,1]]
+queue = []
+newx = 
 """
-class Solution:  
-    def bfs(self,grid,queue,ctr_changed):
-        counter = ctr_changed
-        timer = 0
+class Solution:
+    def convertFresh(self, grid,visited,queue,original_fresh,minutes):
+        neighbors = [(1,0),(0,1),(-1,0),(0,-1)]
         rows = len(grid)
-        #queue = [(2,2)]
-        #ctr_changed = 1
         cols = len(grid[0])
-        neighbors = [(1,0),(0,1),(0,-1),(-1,0)]
         while len(queue) != 0:
-            l = len(queue) #1
-            timer += 1 #3
-            for _ in range(l):
+            n = len(queue) # how many rotten to fresh
+            minutes += 1
+            for _ in range(n):
                 var = queue.pop(0)
                 for x,y in neighbors:
                     newx = x + var[0]
                     newy = y + var[1]
                     if newx>=0 and newy>=0 and newx<rows and newy<cols:
-                        if grid[newx][newy] == 1:
-                            counter -= 1
+                        if grid[newx][newy] == 1 and visited[newx][newy] == False:
                             grid[newx][newy] = 2
                             queue.append((newx,newy))
-        
-        return [timer,counter]
-
+                            visited[newx][newy] = True
+                            original_fresh -= 1
+        return [minutes,original_fresh]
 
 
 
     def orangesRotting(self, grid: List[List[int]]) -> int:
         rows = len(grid)
         cols = len(grid[0])
-        ctr_fresh = 0
+        visited = []
+        for r in range(rows):
+            row = [False]*cols
+            visited.append(row)
+        original_fresh = 0 # keeps tracks of how many fresh oranges we have to convert
         queue = []
+        minutes = -1
         for r in range(rows):
             for c in range(cols):
-                if grid[r][c] == 2:
+                if grid[r][c] == 2 and visited[r][c] == False:
                     queue.append((r,c))
-                if grid[r][c] == 1:
-                    ctr_fresh += 1
-        ctr_changed = ctr_fresh
-        if len(queue) == 0 and ctr_fresh ==0:
-            return 0
-        elif len(queue) == 0:
-            return -1 
-
-        n = self.bfs(grid,queue,ctr_changed)
-        if n[1]!=0:
-            return -1
-        return n[0]-1
-                    
-        #go through the whole grid 
-        #find the twos and append to a queue
-        #then start the bfs process 
-        #keep a counter to keep track of the number of 1s there were initially and if they all have been converted and then return the timer 
-
-        #timer increments using the level logic 
-
+                    visited[r][c] = True
+                if grid[r][c] == 1 and visited[r][c] == False:
+                    original_fresh += 1 
         
+        #add all the rotten oranges into the queue 
+        if original_fresh != 0:
+            output_values = self.convertFresh(grid,visited,queue,original_fresh,minutes)
+            if output_values[1] == 0:
+                return output_values[0]
+            else:
+                return -1 
+        else:
+            return 0 
 
-        return timer
 
-            
+
 
 
         
